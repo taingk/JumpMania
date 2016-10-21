@@ -1,0 +1,61 @@
+html {overflow: hidden;}
+
+@font-face {
+	font-family: 'Roboto';
+	src: local('Roboto-Bold'),
+	url('../fonts/Roboto-Bold.ttf')
+	format('truetype');
+}
+
+body {
+  margin: 0 auto;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  display:block;
+  font-family: Roboto;
+  font-weight: bold;
+  background: url(img/background.png) no-repeat;
+  position: absolute;
+  top: 0px; 
+  left: 0px;
+}
+
+#gameboard{
+	position: absolute;
+	top: 93px;
+	left: 602px;
+	
+	width: 480px;
+	height: 470px;
+
+	border-radius: 	20px;
+
+	overflow: hidden; 	
+}
+
+#player{
+    position : absolute;
+    bottom : 100px;
+    left: 50px;
+    
+    width: 75px;
+    height: 75px;
+
+    background-color: #CED100;
+  
+	border-radius: 	10px;
+}
+
+#bloc1{
+	position: absolute;
+	bottom: 100px;
+	right: 0px;
+	
+	width: 0;
+	height: 0;
+	
+	border-style: solid;
+	border-width: 0 37.5px 50px 37.5px;
+	border-color: transparent transparent #ff00d9 transparent;
+}
