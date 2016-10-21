@@ -6,13 +6,15 @@ function playsong() {
 
 var GAMEBOARDWIDTH = 480;
 var GAMEBOARDHEIGHT = 470;
+var LIFENB = 3;
 
 var player = {
-    right : 355,
-    left : 50,
-    width : 75,    
+    width : $('#player').css('width'),
+    height  : $('#player').css('height'),
+    right : $('#player').css('right'),
+    left : $('#player').css('left'),
+    life : LIFENB,    
 }
-
 
 var bloc1 = {
     left : 430,
