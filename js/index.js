@@ -10,7 +10,7 @@ var GAMEBOARDHEIGHT = 470;
 var player = {
     right : 355,
     left : 50,
-    width : 75,    
+    width : 75,
 }
 
 
@@ -39,17 +39,17 @@ var cassetoi;
 //var score = 0;
 
 function goLeft() {
-    
+
     bloc1.right += 50;
     bloc1.left -= 50;
 
     $('#bloc1').css('right', bloc1.right + 'px');
 
     if (bloc1.right >= GAMEBOARDWIDTH) {
-        
+
         bloc1.right = 0;
         bloc1.left = 430;
-        
+
         $('#bloc1').css('right', bloc1.right + 'px');
         score ++;
     }

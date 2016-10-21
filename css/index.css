@@ -17,7 +17,7 @@ body {
   font-weight: bold;
   background: url(../img/background.png) no-repeat;
   position: absolute;
-  top: 0px; 
+  top: 0px;
   left: 0px;
 }
 
@@ -25,25 +25,45 @@ body {
 	position: absolute;
 	top: 93px;
 	left: 602px;
-	
+
 	width: 480px;
 	height: 470px;
 
 	border-radius: 	20px;
 
-	overflow: hidden; 	
+	overflow: hidden;
+}
+
+#score {
+	position: absolute;
+	top: 391px;
+	left: 242px;
+	width: 150px;
+	height: 50px;
+	font-size: 2.5em;
+	text-align: center;
+}
+
+#bestScore {
+	position: absolute;
+	top: 530px;
+	left: 242px;
+	width: 150px;
+	height: 50px;
+	font-size: 2.5em;
+	text-align: center;
 }
 
 #player{
     position : absolute;
     bottom : 100px;
     left: 50px;
-    
+
     width: 75px;
     height: 75px;
 
     background-color: #CED100;
-  
+
 	border-radius: 	10px;
 }
 
@@ -51,10 +71,10 @@ body {
 	position: absolute;
 	bottom: 100px;
 	right: 0px;
-	
+
 	width: 0;
 	height: 0;
-	
+
 	border-style: solid;
 	border-width: 0 37.5px 50px 37.5px;
 	border-color: transparent transparent #ff00d9 transparent;
