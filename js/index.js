@@ -9,10 +9,10 @@ var GAMEBOARDHEIGHT = 470;
 var LIFENB = 3;
 
 var player = {
-    width : $('#player').css('width'),
-    height  : $('#player').css('height'),
-    right : $('#player').css('right'),
-    left : $('#player').css('left'),
+    width : $('#player').width(),
+    height  : $('#player').height(),
+    //right : $('#player').position().right,
+    left : $('#player').position().left,
     life : LIFENB,    
 }
 
