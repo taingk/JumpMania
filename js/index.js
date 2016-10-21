@@ -4,14 +4,14 @@ function playsong() {
     return 0;
 }
 
-var GAMEBOARDWIDTH = 480;
-var GAMEBOARDHEIGHT = 470;
+var GAMEBOARDWIDTH = $('#gameboard').width();
+var GAMEBOARDHEIGHT = $('#gameboard').height();
 var LIFENB = 3;
 
 var player = {
     width : $('#player').width(),
     height  : $('#player').height(),
-    //right : $('#player').position().right,
+    right : GAMEBOARDWIDTH - ($('#player').position().left + $('#player').width()),
     left : $('#player').position().left,
     life : LIFENB,    
 }
