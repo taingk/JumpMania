@@ -11,6 +11,7 @@ var MOVESTEP = 10;
 var MOVE_DELAI = 30;
 var JUMP_DELAI = 10;
 var LIFENB = 3;
+var RADIUS = 20;
 
 /* GAME OBJECTS */
 //player
@@ -37,8 +38,9 @@ var bloc1 = {
 var sky = 100;
 var ground = GAMEBOARDHEIGHT - 100;
 var score = 0;
-var move;
 var jumping = false;
+var degrees = 0;
+var move;
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
 function moveBloc() {
@@ -81,8 +83,11 @@ function jump() {
     function up() {
         player.top -= MOVESTEP;
         player.bottom -= MOVESTEP;
+        degrees += RADIUS;
 
         $('#player').css('top', player.top + 'px');
+
+        $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
 
         if (player.top < sky) {
             clearInterval(time);
@@ -95,10 +100,15 @@ function jump() {
     function down() {
         player.top += MOVESTEP;
         player.bottom += MOVESTEP;
+        degrees += RADIUS;
 
         $('#player').css('top', player.top + 'px');
 
+        $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
+
         if (player.bottom >= ground){
+
+            $('#player').css({'transform' : 'rotate(0deg)'});
 
             clearInterval(timer);
 
