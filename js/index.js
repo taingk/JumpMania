@@ -14,7 +14,7 @@ var player = {
     height  : $('#player').height(),
     right : $('#player').position().left + $('#player').width(),
     left : $('#player').position().left,
-    life : LIFENB,    
+    life : LIFENB,
 }
 
 var bloc1 = {
@@ -63,7 +63,7 @@ function moveBloc() {
         if (jumping) {
             if (height1 >= (300 - topp - heightt)) {
                 console.log('Game over ! top');
-                clearInterval(cassetoi);
+                clearInterval(move);
             }
         } else {
             console.log('Game over ! left');
