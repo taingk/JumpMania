@@ -1,4 +1,7 @@
+/* INIT CALL */
+
 lib.init();
+initCookies();
 
 function playsong() {
     return 0;
@@ -42,6 +45,31 @@ var jumping = false;
 var degrees = 0;
 var move;
 
+/* COOKIES FUNCTION */
+
+function initCookies() {
+	if (!Cookies.get('BestScore')) {
+		Cookies.set('BestScore', 0);
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	} else {
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	}
+}
+
+function cookieBestScore(score) {
+	if (parseInt(Cookies.get('BestScore')) < score) {
+		Cookies.set('BestScore', score);
+		$('#bestScore').html(score);
+	} else {
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	}
+	console.log(Cookies.get());
+}
+
+function deleteCookies() {
+	Cookies.remove('BestScore');
+}
+
 /* MOVE BLOCS FROM RIGHT TO LEFT */
 function moveBloc() {
     bloc1.right -= MOVESTEP;
@@ -55,6 +83,7 @@ function moveBloc() {
         $('#bloc1').css('left', bloc1.left + 'px');
         score ++;
         $('#score').html(score);
+		cookieBestScore(score);
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
@@ -76,7 +105,10 @@ function moveBloc() {
 
 /* MAKE THE PLAYER JUMPING */
 function jump() {
-    var time = setInterval(up, JUMP_DELAI);
+	if (jumping)
+		return;
+
+	var time = setInterval(up, JUMP_DELAI);
     var timer;
     jumping = true;
 
