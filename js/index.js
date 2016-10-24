@@ -63,7 +63,6 @@ function cookieBestScore(score) {
 	} else {
 		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
 	}
-	console.log(Cookies.get());
 }
 
 function deleteCookies() {
@@ -105,9 +104,6 @@ function moveBloc() {
 
 /* MAKE THE PLAYER JUMPING */
 function jump() {
-	if (jumping)
-		return;
-
 	var time = setInterval(up, JUMP_DELAI);
     var timer;
     jumping = true;
