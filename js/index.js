@@ -4,7 +4,7 @@ function playsong() {
     return 0;
 }
 
-/* STATIC VARIABLES */ 
+/* STATIC VARIABLES */
 var GAMEBOARDWIDTH = $('#gameboard').width();
 var GAMEBOARDHEIGHT = $('#gameboard').height();
 var MOVESTEP = 15;
@@ -47,7 +47,7 @@ function moveBloc() {
     bloc1.right -= MOVESTEP;
     bloc1.left -= MOVESTEP;
     $('#bloc1').css('left', bloc1.left + 'px');
-    
+
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
     if (bloc1.left < 0 - bloc1.width) {
         bloc1.right = GAMEBOARDWIDTH;
@@ -65,7 +65,7 @@ function moveBloc() {
                 console.log('Game over ! top');
                 clearInterval(move);
             }
-        } 
+        }
         /* ... AT THE LEFT */
         else {
             console.log('Game over ! right');
@@ -76,9 +76,12 @@ function moveBloc() {
 
 /* MAKE THE PLAYER JUMPING */
 function jump() {
+	if (jumping)
+		return;
+		
     var time = setInterval(up, JUMP_DELAI);
     var timer;
-    jumping = true;
+	jumping = true;
 
     function up() {
         player.top -= MOVESTEP;
@@ -120,10 +123,10 @@ function jump() {
 function keyFunction(evnt) {
     switch (evnt) {
         case "UP":
-            jump();
+        	jump();
         break;
         case "DOWN":
-            clearInterval(move);          
+            clearInterval(move);
             $('#bloc1').css('left', GAMEBOARDWIDTH + 'px');
             move = setInterval(moveBloc, MOVE_DELAI);
         break;
