@@ -7,7 +7,7 @@ function playsong() {
 /* STATIC VARIABLES */ 
 var GAMEBOARDWIDTH = $('#gameboard').width();
 var GAMEBOARDHEIGHT = $('#gameboard').height();
-var MOVESTEP = 10;
+var MOVESTEP = 15;
 var MOVE_DELAI = 30;
 var JUMP_DELAI = 10;
 var LIFENB = 3;
@@ -93,7 +93,7 @@ function jump() {
             clearInterval(time);
             setTimeout(function() {
                 timer = setInterval(down, JUMP_DELAI);
-            }, 150);
+            }, 100);
         }
     }
 
