@@ -6,69 +6,71 @@ function playsong() {
 
 var GAMEBOARDWIDTH = $('#gameboard').width();
 var GAMEBOARDHEIGHT = $('#gameboard').height();
+var MOVESTEP = 50;
 var LIFENB = 3;
 
 var player = {
     width : $('#player').width(),
     height  : $('#player').height(),
-    right : GAMEBOARDWIDTH - ($('#player').position().left + $('#player').width()),
+    right : $('#player').position().left + $('#player').width(),
     left : $('#player').position().left,
     life : LIFENB,    
 }
 
 var bloc1 = {
-    left : 430,
-    right : 0,
-    width : 50
+    width : $('#bloc1').width(),
+    height  : $('#bloc1').height(),
+    right : GAMEBOARDWIDTH,
+    left : $('#bloc1').position().left,
 }
 
 var score = 0;
+
+var move;
 var jumping = false;
 
 //var left1;
 
-var timer;
-var timerrrr;
+//var timerrrr;
 //var left1 = 1000; //parseInt($('#bloc1').css('left').slice(0, -2));
 //var top1 = 250; //parseInt($('#bloc1').css('top').slice(0, -2));
 //var height1 = 50; //parseInt($('#bloc1').css('height').slice(0, -2));
 //var left = 500; //parseInt($('#bloc').css('left').slice(0, -2));
 //var width = 100; //parseInt($('#bloc').css('width').slice(0, -2));
-var topp = 200; //parseInt($('#bloc').css('top').slice(0, -2));
-var heightt = 100; //parseInt($('#bloc').css('height').slice(0, -2));
-var cassetoi;
+//var topp = 200; //parseInt($('#bloc').css('top').slice(0, -2));
+//var heightt = 100; //parseInt($('#bloc').css('height').slice(0, -2));
+//var cassetoi;
 //var jumpp = false;
 //var score = 0;
 
-function goLeft() {
+function moveBloc() {
 
-    bloc1.right += 50;
-    bloc1.left -= 50;
+    bloc1.right -= MOVESTEP;
+    bloc1.left -= MOVESTEP;
 
-    $('#bloc1').css('right', bloc1.right + 'px');
+    $('#bloc1').css('left', bloc1.left + 'px');
 
-    if (bloc1.right >= GAMEBOARDWIDTH) {
+    if (bloc1.left < 0 - bloc1.width) {
 
-        bloc1.right = 0;
-        bloc1.left = 430;
+        bloc1.right = GAMEBOARDWIDTH;
+        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
 
-        $('#bloc1').css('right', bloc1.right + 'px');
+        $('#bloc1').css('left', bloc1.left + 'px');
         score ++;
     }
 
-    if (bloc1.left <= (player.left + player.width) && bloc1.left >= player.left) {
+    if (bloc1.left <= player.right && bloc1.left >= player.left) {
         if (jumping) {
-            /*if (height1 >= (300 - topp - heightt)) {
+            if (height1 >= (300 - topp - heightt)) {
                 console.log('Game over ! top');
                 clearInterval(cassetoi);
-            }*/
+            }
         } else {
-            //**/console.log('Game over ! left');
-            clearInterval(cassetoi);
+            console.log('Game over ! left');
+            clearInterval(move);
         }
     }
-    /*
-    else if(left1 <= left){
+    /*else if(left1 <= left){
 		score ++;
 		$('#score').html(score);
 	}*/
@@ -103,21 +105,21 @@ function jump() {
     }
 }*/
 
-function keyFunction(evnt) {
+/*function keyFunction(evnt) {
     switch (evnt) {
         case "UP":
             jump();
             break;
         case "DOWN":
-            clearInterval(cassetoi);
+            clearInterval(move);
             $('#bloc1').css('left', '1000px');
             //bloc1 = 1000;
             //left1 = 1000;
-            cassetoi = setInterval(goLeft, 50);
+            move = setInterval(goLeft, 50);
             break;
     }
-}
+}*/
 
 var start = setTimeout(function() {
-    cassetoi = setInterval(goLeft, 100);
-}, 2000)
+    move = setInterval(moveBloc, 100);
+}, 2000);
