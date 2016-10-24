@@ -159,6 +159,9 @@ function keyFunction(evnt) {
             $('#bloc1').css('left', GAMEBOARDWIDTH + 'px');
             move = setInterval(moveBloc, MOVE_DELAI);
         break;
+		case 1:
+			deleteCookies();
+		break;
     }
 }
 
