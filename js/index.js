@@ -191,10 +191,14 @@ function moveGroundDown() {
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
         /* ... AT THE TOP */
     	if (!jumping) {
+
 			setTimeout(function() {
 				timer = setInterval(down, JUMP_DELAI);
 			}, 100);
         }
+		else {
+			console.log('BLOQUER');
+		}
 	}
 }
 
@@ -276,8 +280,8 @@ var start = launchEvent();
 function launchEvent (){
     //setTimeout(function() {
 
-	console.log(sky);
         var event = Math.floor((Math.random() * 3) + 1);
+		whenJump = false;
 
         //move = setInterval(moveBloc, MOVE_DELAI);
         switch (event){
