@@ -46,6 +46,8 @@ var degrees = 0;
 var time;
 var timer;
 var move;
+// Bloc1's bottom from css sheet
+var baseBottom = 50;
 
 /* COOKIES FUNCTION */
 
@@ -71,9 +73,92 @@ function deleteCookies() {
 	Cookies.remove('BestScore');
 }
 
+function initBloc(color) {
+	$('#bloc1').remove();
+	$('#gameboard').append('<div id="bloc1"></div>');
+	$('#bloc1').css('bottom', baseBottom);
+	$('#bloc1').css('background-color', color);
+}
+
 /* MOVE BLOCS FROM RIGHT TO LEFT */
 function moveBloc() {
     bloc1.right -= MOVESTEP;
+    bloc1.left -= MOVESTEP;
+    $('#bloc1').css('left', bloc1.left + 'px');
+
+    /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
+    if (bloc1.left < 0 - bloc1.width) {
+        bloc1.right = GAMEBOARDWIDTH;
+        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
+        $('#bloc1').css('left', bloc1.left + 'px');
+
+        score ++;
+        $('#score').html(score);
+
+        clearInterval(move);
+		cookieBestScore(score);
+        launchEvent();
+    }
+
+    /* IF THE PLAYER TOUCH THE BLOC ... */
+    if (bloc1.left <= player.right && bloc1.left >= player.left) {
+        /* ... AT THE TOP */
+        if (jumping) {
+            if (bloc1.top <= player.bottom) {
+                console.log('Game over ! top');
+                clearInterval(move);
+            }
+        }
+        /* ... AT THE LEFT */
+        else {
+            console.log('Game over ! right');
+            clearInterval(move);
+        }
+    }
+}
+
+function moveGroundUp() {
+	bloc1.right -= MOVESTEP;
+    bloc1.left -= MOVESTEP;
+	$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
+	$('#bloc1').css('background-color', 'grey');
+    $('#bloc1').css('left', bloc1.left + 'px');
+
+    /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
+    if (bloc1.left < 0 - bloc1.width) {
+		$('#bloc1').remove();
+        bloc1.right = GAMEBOARDWIDTH;
+        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
+        $('#bloc1').css('left', bloc1.left + 'px');
+
+		sky = sky - 50;
+		baseBottom = baseBottom + 50
+		$('#ground').css('height', baseBottom + 'px');
+
+        clearInterval(move);
+		cookieBestScore(score);
+        launchEvent();
+    }
+
+    /* IF THE PLAYER TOUCH THE BLOC ... */
+    if (bloc1.left <= player.right && bloc1.left >= player.left) {
+        /* ... AT THE TOP */
+        if (jumping) {
+            if (bloc1.top <= player.bottom) {
+                console.log('Game over ! top');
+                clearInterval(move);
+            }
+        }
+        /* ... AT THE LEFT */
+        else {
+            console.log('Game over ! right');
+            clearInterval(move);
+        }
+    }
+}
+
+function moveGroundDown() {
+	bloc1.right -= MOVESTEP;
     bloc1.left -= MOVESTEP;
     $('#bloc1').css('left', bloc1.left + 'px');
 
@@ -90,7 +175,7 @@ function moveBloc() {
 		cookieBestScore(score);
     }
 
-    /* IF THE PLAYER TOUCH THE BLOC ... */ 
+    /* IF THE PLAYER TOUCH THE BLOC ... */
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
         /* ... AT THE TOP */
         if (jumping) {
@@ -163,11 +248,13 @@ function keyFunction(evnt) {
             move = setInterval(moveBloc, MOVE_DELAI);
         break;
         case "RIGHT":
+			sky = sky - 50;
             var add = document.getElementById('ground').clientHeight + 50;
             $('#ground').css('height', add +'px');
             ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
         break;
         case "LEFT":
+			sky = sky + 50;
             var add = document.getElementById('ground').clientHeight - 50;
             $('#ground').css('height', add +'px');
             ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
@@ -186,24 +273,29 @@ function launchEvent (){
         var event = Math.floor((Math.random() * 3) + 1);
 
         //move = setInterval(moveBloc, MOVE_DELAI);
-
         switch (event){
             case 1:
-                $('#bloc1').css('background-color', '#ff00d9');
-                move = setInterval(moveBloc, MOVE_DELAI);
+                //$('#bloc1').css('background-color', '#ff00d9');
+//                move = setInterval(moveBloc, MOVE_DELAI);$
+				ground = ground - 50;
+				initBloc('grey');
+				move = setInterval(moveGroundUp, MOVE_DELAI);
             break;
             case 2:
-                $('#bloc1').css('background-color', 'red');
+				//move = setInterval(moveGroundUp, MOVE_DELAI);
+				initBloc('blue')
                 move = setInterval(moveBloc, MOVE_DELAI);
             break;
             case 3:
-                $('#bloc1').css('background-color', 'blue');
+				//move = setInterval(moveGroundUp, MOVE_DELAI);
+//				move = setInterval(moveGroundDown, MOVE_DELAI);
+				initBloc('red');
                 move = setInterval(moveBloc, MOVE_DELAI);
             break;
             default:
                 launchEvent();
             break;
-            /*case 2: 
+            /*case 2:
             break;
             case 3:
             break;*/

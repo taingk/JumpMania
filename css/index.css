@@ -78,6 +78,8 @@ body {
     background-color: #ff00d9;
 
 	border-radius: 	10px;
+
+	z-index: 1;
 }
 
 #ground{
@@ -91,4 +93,6 @@ body {
     background-color: grey;
 
 	border-radius: 0;
+
+	z-index: 2;
 }
