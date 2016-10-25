@@ -19,7 +19,7 @@ var player = {
     width : $('#player').width(),
     height  : $('#player').height(),
     top : $('#player').position().top,
-    bottom : $('#player').position().top + $('#player').height(),
+    bottom : GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight,
     right : $('#player').position().left + $('#player').width(),
     left : $('#player').position().left,
     life : LIFENB,
@@ -29,17 +29,19 @@ var bloc1 = {
     width : $('#bloc1').width(),
     height  : $('#bloc1').height(),
     top : $('#bloc1').position().top,
-    bottom : $('#bloc1').position().top + $('#bloc1').height(),
+    bottom : GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight,
     right : GAMEBOARDWIDTH,
     left : $('#bloc1').position().left,
 }
 
 /* GLOBAL VARIABLE */
-var sky = 100;
-var ground = GAMEBOARDHEIGHT - 100;
+var sky = 4*player.height;
+var ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
 var score = 0;
 var jumping = false;
 var degrees = 0;
+var time;
+var timer;
 var move;
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
@@ -55,9 +57,12 @@ function moveBloc() {
         $('#bloc1').css('left', bloc1.left + 'px');
         score ++;
         $('#score').html(score);
+
+        clearInterval(move);
+        launchEvent();
     }
 
-    /* IF THE PLAYER TOUCH THE BLOC ... */
+    /* IF THE PLAYER TOUCH THE BLOC ... */ 
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
         /* ... AT THE TOP */
         if (jumping) {
@@ -66,7 +71,7 @@ function moveBloc() {
                 clearInterval(move);
             }
         } 
-        /* ... AT THE LEFT */
+        /* ... AT THE LEFT */ 
         else {
             console.log('Game over ! right');
             clearInterval(move);
@@ -76,60 +81,104 @@ function moveBloc() {
 
 /* MAKE THE PLAYER JUMPING */
 function jump() {
-    var time = setInterval(up, JUMP_DELAI);
-    var timer;
+    time = setInterval(up, JUMP_DELAI);
+
     jumping = true;
+}
 
-    function up() {
-        player.top -= MOVESTEP;
-        player.bottom -= MOVESTEP;
-        degrees += RADIUS;
+function up() {
+    player.top -= MOVESTEP;
+    player.bottom -= MOVESTEP;
+    degrees += RADIUS;
 
-        $('#player').css('top', player.top + 'px');
+    $('#player').css('top', player.top + 'px');
 
-        $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
+    $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
 
-        if (player.top < sky) {
-            clearInterval(time);
-            setTimeout(function() {
-                timer = setInterval(down, JUMP_DELAI);
-            }, 100);
-        }
+    if (player.top < sky) {
+        clearInterval(time);
+        setTimeout(function() {
+            timer = setInterval(down, JUMP_DELAI);
+        }, 100);
     }
+}
 
-    function down() {
-        player.top += MOVESTEP;
-        player.bottom += MOVESTEP;
-        degrees += RADIUS;
+function down() {
+    player.top += MOVESTEP;
+    player.bottom += MOVESTEP;
+    degrees += RADIUS;
 
-        $('#player').css('top', player.top + 'px');
+    $('#player').css('top', player.top + 'px');
 
-        $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
+    $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
 
-        if (player.bottom >= ground){
+    if (player.bottom >= ground){
 
-            $('#player').css({'transform' : 'rotate(0deg)'});
+        $('#player').css({'transform' : 'rotate(0deg)'});
 
-            clearInterval(timer);
+        clearInterval(timer);
 
-            jumping = false;
-        }
+        jumping = false;
     }
 }
 
 function keyFunction(evnt) {
     switch (evnt) {
         case "UP":
+        if(!jumping){
             jump();
+        }
         break;
         case "DOWN":
             clearInterval(move);          
             $('#bloc1').css('left', GAMEBOARDWIDTH + 'px');
             move = setInterval(moveBloc, MOVE_DELAI);
         break;
+        case "RIGHT":
+            var add = document.getElementById('ground').clientHeight + 50;
+            $('#ground').css('height', add +'px');
+            ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
+        break;
+        case "LEFT":
+            var add = document.getElementById('ground').clientHeight - 50;
+            $('#ground').css('height', add +'px');
+            ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
+            setTimeout(function() {
+                timer = setInterval(down, JUMP_DELAI);
+            }, 100);
+        break;
     }
 }
 
-var start = setTimeout(function() {
-    move = setInterval(moveBloc, MOVE_DELAI);
-}, 2000);
+var start = launchEvent();
+
+function launchEvent (){
+    //setTimeout(function() {
+
+        var event = Math.floor((Math.random() * 3) + 1);
+
+        //move = setInterval(moveBloc, MOVE_DELAI);
+
+        switch (event){
+            case 1:
+                $('#bloc1').css('background-color', '#ff00d9');
+                move = setInterval(moveBloc, MOVE_DELAI);
+            break;
+            case 2:
+                $('#bloc1').css('background-color', 'red');
+                move = setInterval(moveBloc, MOVE_DELAI);
+            break;
+            case 3:
+                $('#bloc1').css('background-color', 'blue');
+                move = setInterval(moveBloc, MOVE_DELAI);
+            break;
+            default:
+                launchEvent();
+            break;
+            /*case 2: 
+            break;
+            case 3:
+            break;*/
+        }
+    //}, 2000);
+}
