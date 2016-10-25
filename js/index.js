@@ -73,11 +73,23 @@ function deleteCookies() {
 	Cookies.remove('BestScore');
 }
 
-function initBloc(color) {
+function initBloc(color, state) {
 	$('#bloc1').remove();
 	$('#gameboard').append('<div id="bloc1"></div>');
-	$('#bloc1').css('bottom', baseBottom);
-	$('#bloc1').css('background-color', color);
+	$('#bloc1').css({
+		'bottom': baseBottom + 'px',
+		'background-color': color
+	});
+
+	if (state == 'up') {
+		ground = ground - 50;
+		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
+		$('#bloc1').css('border-radius', '0px');
+	} else if (state == 'down') {
+		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
+		$('#bloc1').css('bottom', (baseBottom - 50) + 'px');
+		$('#bloc1').css('border-radius', '0px');
+	}
 }
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
@@ -120,8 +132,6 @@ function moveBloc() {
 function moveGroundUp() {
 	bloc1.right -= MOVESTEP;
     bloc1.left -= MOVESTEP;
-	$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
-	$('#bloc1').css('background-color', 'grey');
     $('#bloc1').css('left', bloc1.left + 'px');
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
@@ -136,7 +146,6 @@ function moveGroundUp() {
 		$('#ground').css('height', baseBottom + 'px');
 
         clearInterval(move);
-		cookieBestScore(score);
         launchEvent();
     }
 
@@ -164,32 +173,29 @@ function moveGroundDown() {
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
     if (bloc1.left < 0 - bloc1.width) {
+		$('#bloc1').remove();
         bloc1.right = GAMEBOARDWIDTH;
         bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
         $('#bloc1').css('left', bloc1.left + 'px');
-        score ++;
-        $('#score').html(score);
+
+		ground = ground + 50;
+		sky = sky + 50;
+		baseBottom = baseBottom - 50
+		$('#ground').css('height', baseBottom + 'px');
 
         clearInterval(move);
         launchEvent();
-		cookieBestScore(score);
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
         /* ... AT THE TOP */
-        if (jumping) {
-            if (bloc1.top <= player.bottom) {
-                console.log('Game over ! top');
-                clearInterval(move);
-            }
+    	if (!jumping) {
+			setTimeout(function() {
+				timer = setInterval(down, JUMP_DELAI);
+			}, 100);
         }
-        /* ... AT THE LEFT */
-        else {
-            console.log('Game over ! right');
-            clearInterval(move);
-        }
-    }
+	}
 }
 
 /* MAKE THE PLAYER JUMPING */
@@ -270,6 +276,7 @@ var start = launchEvent();
 function launchEvent (){
     //setTimeout(function() {
 
+	console.log(sky);
         var event = Math.floor((Math.random() * 3) + 1);
 
         //move = setInterval(moveBloc, MOVE_DELAI);
@@ -277,14 +284,23 @@ function launchEvent (){
             case 1:
                 //$('#bloc1').css('background-color', '#ff00d9');
 //                move = setInterval(moveBloc, MOVE_DELAI);$
-				ground = ground - 50;
-				initBloc('grey');
-				move = setInterval(moveGroundUp, MOVE_DELAI);
+				if (sky > 0) {
+					initBloc('grey', 'up');
+					move = setInterval(moveGroundUp, MOVE_DELAI);
+				}
+				else {
+					launchEvent();
+				}
             break;
             case 2:
 				//move = setInterval(moveGroundUp, MOVE_DELAI);
-				initBloc('blue')
-                move = setInterval(moveBloc, MOVE_DELAI);
+				if (baseBottom > 50) {
+					initBloc('white', 'down');
+                	move = setInterval(moveGroundDown, MOVE_DELAI);
+				}
+				else {
+					launchEvent();
+				}
             break;
             case 3:
 				//move = setInterval(moveGroundUp, MOVE_DELAI);
