@@ -113,7 +113,7 @@ function moveBloc() {
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
-    if (bloc1.left <= player.right && bloc1.left >= player.left) {
+    if (bloc1.left <= player.right && bloc1.left >= player.left || bloc1.right >= player.left && bloc1.right <= player.right) {
         /* ... AT THE TOP */
         if (jumping) {
             if (bloc1.top <= player.bottom) {
@@ -196,9 +196,12 @@ function moveGroundDown() {
 				timer = setInterval(down, JUMP_DELAI);
 			}, 100);
         }
-		else {
-			console.log('BLOQUER');
-		}
+		/*else if (jumping){
+			clearInterval(timer);
+            setTimeout(function() {
+                timer = setInterval(down, JUMP_DELAI);
+            }, 100);
+		}*/
 	}
 }
 
