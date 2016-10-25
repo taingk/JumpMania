@@ -1,4 +1,7 @@
+/* INIT CALL */
+
 lib.init();
+initCookies();
 
 function playsong() {
     return 0;
@@ -44,6 +47,30 @@ var time;
 var timer;
 var move;
 
+/* COOKIES FUNCTION */
+
+function initCookies() {
+	if (!Cookies.get('BestScore')) {
+		Cookies.set('BestScore', 0);
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	} else {
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	}
+}
+
+function cookieBestScore(score) {
+	if (parseInt(Cookies.get('BestScore')) < score) {
+		Cookies.set('BestScore', score);
+		$('#bestScore').html(score);
+	} else {
+		$('#bestScore').html(parseInt(Cookies.get('BestScore')));
+	}
+}
+
+function deleteCookies() {
+	Cookies.remove('BestScore');
+}
+
 /* MOVE BLOCS FROM RIGHT TO LEFT */
 function moveBloc() {
     bloc1.right -= MOVESTEP;
@@ -60,6 +87,7 @@ function moveBloc() {
 
         clearInterval(move);
         launchEvent();
+		cookieBestScore(score);
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */ 
