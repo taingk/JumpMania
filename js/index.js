@@ -10,7 +10,8 @@ function playsong() {
 /* STATIC VARIABLES */
 var GAMEBOARDWIDTH = $('#gameboard').width();
 var GAMEBOARDHEIGHT = $('#gameboard').height();
-var MOVESTEP = 15;
+var MOVESTEP = 16.6;
+var MOVEBLOC = 15;
 var MOVE_DELAI = 30;
 var JUMP_DELAI = 10;
 var LIFENB = 3;
@@ -94,8 +95,8 @@ function initBloc(color, state) {
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
 function moveBloc(state) {
-    bloc1.right -= MOVESTEP;
-    bloc1.left -= MOVESTEP;
+    bloc1.right -= MOVEBLOC;
+    bloc1.left -= MOVEBLOC;
     $('#bloc1').css('left', bloc1.left + 'px');
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
@@ -110,11 +111,11 @@ function moveBloc(state) {
 
 		if (state == 'up') {
 			sky = sky - 50;
-			baseBottom = baseBottom + 50
+			baseBottom = baseBottom + 50;
 			$('#ground').css('height', baseBottom + 'px');
 		} else if (state == 'down') {
 			sky = sky + 50;
-			baseBottom = baseBottom - 50
+			baseBottom = baseBottom - 50;
 			$('#ground').css('height', baseBottom + 'px');
 		} else {
         	score ++;
@@ -185,11 +186,11 @@ function down() {
 
     $('#player').css({'transform' : 'rotate('+ degrees +'deg)'});
 
-    if (player.bottom >= ground){
+    if (player.bottom >= ground) {
 
         $('#player').css({'transform' : 'rotate(0deg)'});
 
-        clearInterval(timer);
+		clearInterval(timer);
 
         jumping = false;
     }
