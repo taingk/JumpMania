@@ -82,7 +82,6 @@ function initBloc(color, state) {
 	});
 
 	if (state == 'up') {
-		ground = ground - 50;
 		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
 		$('#bloc1').css('border-radius', '0px');
 	} else if (state == 'down') {
@@ -134,11 +133,21 @@ function moveBloc(state) {
 			return;
 		if (state == 'down' && !jumping && !lock) {
 			lock = true;
+
 			setTimeout(function() {
 				timer = setInterval(down, JUMP_DELAI);
 			}, 100);
 			return;
 		}
+		/* STATE UP */
+		if (lock)
+			return;
+		if (state == 'up' && jumping && !lock) {
+			lock = true;
+			ground = ground - 50;
+			return;
+		}
+		/* ... AT THE TOP */
 		if (jumping) {
             if (bloc1.top <= player.bottom) {
                 console.log('Game over ! top');
@@ -261,6 +270,7 @@ function launchEvent (){
 //				move = setInterval(moveGroundDown, MOVE_DELAI);
 				initBloc('red');
                 move = setInterval(moveBloc, MOVE_DELAI);
+				//launchEvent();
             break;
             default:
                 launchEvent();
