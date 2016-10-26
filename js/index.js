@@ -50,6 +50,7 @@ var move;
 // Bloc1's bottom from css sheet
 var baseBottom = 50;
 var lock = false;
+var lockGround = false;
 
 /* COOKIES FUNCTION */
 
@@ -85,7 +86,6 @@ function initBloc(color, state) {
 		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
 		$('#bloc1').css('border-radius', '0px');
 	} else if (state == 'down') {
-		ground = ground + 50;
 		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
 		$('#bloc1').css('bottom', (baseBottom - 50) + 'px');
 		$('#bloc1').css('border-radius', '0px');
@@ -103,6 +103,7 @@ function moveBloc(state) {
 		$('#bloc1').remove();
 		$('#gameboard').append('<div id="bloc1"></div>');
 
+		lockGround = false;
 		lock = false;
 		bloc1.right = GAMEBOARDWIDTH;
         bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
@@ -128,12 +129,15 @@ function moveBloc(state) {
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
-        /* ... AT THE TOP */
-		if (lock)
+        /* STATE DOWN */
+		if (lock || lockGround)
 			return;
+		if (state == 'down' && !lockGround) {
+			lockGround = true;
+			ground = ground + 50;
+		}
 		if (state == 'down' && !jumping && !lock) {
 			lock = true;
-
 			setTimeout(function() {
 				timer = setInterval(down, JUMP_DELAI);
 			}, 100);
