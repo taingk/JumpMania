@@ -48,6 +48,7 @@ var timer;
 var move;
 // Bloc1's bottom from css sheet
 var baseBottom = 50;
+var lock = false;
 
 /* COOKIES FUNCTION */
 
@@ -74,8 +75,6 @@ function deleteCookies() {
 }
 
 function initBloc(color, state) {
-	$('#bloc1').remove();
-	$('#gameboard').append('<div id="bloc1"></div>');
 	$('#bloc1').css({
 		'bottom': baseBottom + 'px',
 		'background-color': color
@@ -86,6 +85,7 @@ function initBloc(color, state) {
 		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
 		$('#bloc1').css('border-radius', '0px');
 	} else if (state == 'down') {
+		ground = ground + 50;
 		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
 		$('#bloc1').css('bottom', (baseBottom - 50) + 'px');
 		$('#bloc1').css('border-radius', '0px');
@@ -93,19 +93,33 @@ function initBloc(color, state) {
 }
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
-function moveBloc() {
+function moveBloc(state) {
     bloc1.right -= MOVESTEP;
     bloc1.left -= MOVESTEP;
     $('#bloc1').css('left', bloc1.left + 'px');
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
     if (bloc1.left < 0 - bloc1.width) {
-        bloc1.right = GAMEBOARDWIDTH;
+		$('#bloc1').remove();
+		$('#gameboard').append('<div id="bloc1"></div>');
+
+		lock = false;
+		bloc1.right = GAMEBOARDWIDTH;
         bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
         $('#bloc1').css('left', bloc1.left + 'px');
 
-        score ++;
-        $('#score').html(score);
+		if (state == 'up') {
+			sky = sky - 50;
+			baseBottom = baseBottom + 50
+			$('#ground').css('height', baseBottom + 'px');
+		} else if (state == 'down') {
+			sky = sky + 50;
+			baseBottom = baseBottom - 50
+			$('#ground').css('height', baseBottom + 'px');
+		} else {
+        	score ++;
+        	$('#score').html(score);
+		}
 
         clearInterval(move);
 		cookieBestScore(score);
@@ -115,91 +129,27 @@ function moveBloc() {
     /* IF THE PLAYER TOUCH THE BLOC ... */
     if (bloc1.left <= player.right && bloc1.left >= player.left) {
         /* ... AT THE TOP */
-        if (jumping) {
-            if (bloc1.top <= player.bottom) {
-                console.log('Game over ! top');
-                clearInterval(move);
-            }
-        }
-        /* ... AT THE LEFT */
-        else {
-            console.log('Game over ! right');
-            clearInterval(move);
-        }
-    }
-}
-
-function moveGroundUp() {
-	bloc1.right -= MOVESTEP;
-    bloc1.left -= MOVESTEP;
-    $('#bloc1').css('left', bloc1.left + 'px');
-
-    /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
-    if (bloc1.left < 0 - bloc1.width) {
-		$('#bloc1').remove();
-        bloc1.right = GAMEBOARDWIDTH;
-        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
-        $('#bloc1').css('left', bloc1.left + 'px');
-
-		sky = sky - 50;
-		baseBottom = baseBottom + 50
-		$('#ground').css('height', baseBottom + 'px');
-
-        clearInterval(move);
-        launchEvent();
-    }
-
-    /* IF THE PLAYER TOUCH THE BLOC ... */
-    if (bloc1.left <= player.right && bloc1.left >= player.left) {
-        /* ... AT THE TOP */
-        if (jumping) {
-            if (bloc1.top <= player.bottom) {
-                console.log('Game over ! top');
-                clearInterval(move);
-            }
-        }
-        /* ... AT THE LEFT */
-        else {
-            console.log('Game over ! right');
-            clearInterval(move);
-        }
-    }
-}
-
-function moveGroundDown() {
-	bloc1.right -= MOVESTEP;
-    bloc1.left -= MOVESTEP;
-    $('#bloc1').css('left', bloc1.left + 'px');
-
-    /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
-    if (bloc1.left < 0 - bloc1.width) {
-		$('#bloc1').remove();
-        bloc1.right = GAMEBOARDWIDTH;
-        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
-        $('#bloc1').css('left', bloc1.left + 'px');
-
-		ground = ground + 50;
-		sky = sky + 50;
-		baseBottom = baseBottom - 50
-		$('#ground').css('height', baseBottom + 'px');
-
-        clearInterval(move);
-        launchEvent();
-    }
-
-    /* IF THE PLAYER TOUCH THE BLOC ... */
-    if (bloc1.left <= player.right && bloc1.left >= player.left) {
-        /* ... AT THE TOP */
-    	if (!jumping) {
-
+		if (lock)
+			return;
+		if (state == 'down' && !jumping && !lock) {
+			lock = true;
 			setTimeout(function() {
 				timer = setInterval(down, JUMP_DELAI);
 			}, 100);
-        }
-		else {
-			console.log('BLOQUER');
+			return;
 		}
-	}
+		if (jumping) {
+            if (bloc1.top <= player.bottom) {
+                console.log('Game over ! top');
+                clearInterval(move);
+            }
+        }
+        /* ... AT THE LEFT */
+        else {
+            console.log('Game over ! right');
+            clearInterval(move);
+        }
+    }
 }
 
 /* MAKE THE PLAYER JUMPING */
@@ -281,7 +231,6 @@ function launchEvent (){
     //setTimeout(function() {
 
         var event = Math.floor((Math.random() * 3) + 1);
-		whenJump = false;
 
         //move = setInterval(moveBloc, MOVE_DELAI);
         switch (event){
@@ -290,7 +239,7 @@ function launchEvent (){
 //                move = setInterval(moveBloc, MOVE_DELAI);$
 				if (sky > 0) {
 					initBloc('grey', 'up');
-					move = setInterval(moveGroundUp, MOVE_DELAI);
+					move = setInterval(moveBloc, MOVE_DELAI, 'up');
 				}
 				else {
 					launchEvent();
@@ -300,7 +249,7 @@ function launchEvent (){
 				//move = setInterval(moveGroundUp, MOVE_DELAI);
 				if (baseBottom > 50) {
 					initBloc('white', 'down');
-                	move = setInterval(moveGroundDown, MOVE_DELAI);
+                	move = setInterval(moveBloc, MOVE_DELAI, 'down');
 				}
 				else {
 					launchEvent();
