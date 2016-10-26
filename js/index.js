@@ -47,6 +47,7 @@ var degrees = 0;
 var time;
 var timer;
 var move;
+var delay = 500;
 // Bloc1's bottom from css sheet
 var baseBottom = 50;
 var lock = false;
@@ -79,16 +80,25 @@ function deleteCookies() {
 function initBloc(color, state) {
 	$('#bloc1').css({
 		'bottom': baseBottom + 'px',
+        'width': '40px',
+        'height': '40px',
 		'background-color': color
 	});
 
 	if (state == 'up') {
-		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
-		$('#bloc1').css('border-radius', '0px');
+		$('#bloc1').css({
+            'width': GAMEBOARDWIDTH + 50 + 'px',
+            'height': '50px',
+		    'border-radius': '0px'
+        });
 	} else if (state == 'down') {
-		$('#bloc1').css('width', GAMEBOARDWIDTH + 50 + 'px');
-		$('#bloc1').css('bottom', (baseBottom - 50) + 'px');
-		$('#bloc1').css('border-radius', '0px');
+		//ground = ground + 50;
+		$('#bloc1').css({
+            'width': GAMEBOARDWIDTH + 50 + 'px',
+            'height': '50px',
+            'bottom': (baseBottom - 50) + 'px',
+            'border-radius': '0px',
+        });
 	}
 }
 
@@ -124,7 +134,7 @@ function moveBloc(state) {
 
         clearInterval(move);
 		cookieBestScore(score);
-        launchEvent();
+        //launchEvent();
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
@@ -156,12 +166,14 @@ function moveBloc(state) {
             if (bloc1.top <= player.bottom) {
                 console.log('Game over ! top');
                 clearInterval(move);
+                clearInterval(start);
             }
         }
         /* ... AT THE LEFT */
         else {
             console.log('Game over ! right');
             clearInterval(move);
+            clearInterval(start);
         }
     }
 }
@@ -239,12 +251,13 @@ function keyFunction(evnt) {
     }
 }
 
-var start = launchEvent();
-
-function launchEvent (){
-    //setTimeout(function() {
+var start = setInterval(function() {
 
         var event = Math.floor((Math.random() * 3) + 1);
+
+        delay = Math.floor((Math.random() * 1500) + 500);
+
+        //var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
 
         //move = setInterval(moveBloc, MOVE_DELAI);
         switch (event){
@@ -255,9 +268,9 @@ function launchEvent (){
 					initBloc('grey', 'up');
 					move = setInterval(moveBloc, MOVE_DELAI, 'up');
 				}
-				else {
+				/*else {
 					launchEvent();
-				}
+				}*/
             break;
             case 2:
 				//move = setInterval(moveGroundUp, MOVE_DELAI);
@@ -265,9 +278,9 @@ function launchEvent (){
 					initBloc('white', 'down');
                 	move = setInterval(moveBloc, MOVE_DELAI, 'down');
 				}
-				else {
+				/*else {
 					launchEvent();
-				}
+				}*/
             break;
             case 3:
 				//move = setInterval(moveGroundUp, MOVE_DELAI);
@@ -277,12 +290,11 @@ function launchEvent (){
 				//launchEvent();
             break;
             default:
-                launchEvent();
+                //launchEvent();
             break;
             /*case 2:
             break;
             case 3:
             break;*/
         }
-    //}, 2000);
-}
+    }, 1500);
