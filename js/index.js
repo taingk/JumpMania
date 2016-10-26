@@ -38,6 +38,24 @@ var bloc1 = {
     left : $('#bloc1').position().left,
 }
 
+var bloc2 = {
+    width : $('#bloc2').width(),
+    height  : $('#bloc2').height(),
+    top : $('#bloc2').position().top,
+    bottom : GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight,
+    right : GAMEBOARDWIDTH,
+    left : $('#bloc2').position().left,
+}
+
+var bloc3 = {
+    width : $('#bloc3').width(),
+    height  : $('#bloc3').height(),
+    top : $('#bloc3').position().top,
+    bottom : GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight,
+    right : GAMEBOARDWIDTH,
+    left : $('#bloc3').position().left,
+}
+
 /* GLOBAL VARIABLE */
 var sky = 4*player.height;
 var ground = GAMEBOARDHEIGHT - document.getElementById('ground').clientHeight;
@@ -52,6 +70,7 @@ var delay = 500;
 var baseBottom = 50;
 var lock = false;
 var lockGround = false;
+var nb_bloc = 0;
 
 /* COOKIES FUNCTION */
 
@@ -77,47 +96,54 @@ function deleteCookies() {
 	Cookies.remove('BestScore');
 }
 
-function initBloc(color, state) {
-	$('#bloc1').css({
-		'bottom': baseBottom + 'px',
-        'width': '40px',
-        'height': '40px',
-		'background-color': color
-	});
+function initBloc(color, state, event, nb_bloc) {
+	$('#gameboard').append('<div id="bloc'+event+'" class="'+nb_bloc+'"></div>');
 
 	if (state == 'up') {
-		$('#bloc1').css({
-            'width': GAMEBOARDWIDTH + 50 + 'px',
+		$('#bloc' + nb_bloc).css({
             'height': '50px',
 		    'border-radius': '0px'
         });
 	} else if (state == 'down') {
-		//ground = ground + 50;
-		$('#bloc1').css({
-            'width': GAMEBOARDWIDTH + 50 + 'px',
+		$('#bloc' + nb_bloc).css({
             'height': '50px',
             'bottom': (baseBottom - 50) + 'px',
             'border-radius': '0px',
         });
+	} else {
+		$('.' + nb_bloc).css({
+			'bottom': baseBottom + 'px',
+			'background-color': color
+		});
 	}
 }
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
-function moveBloc(state) {
-    bloc1.right -= MOVEBLOC;
-    bloc1.left -= MOVEBLOC;
-    $('#bloc1').css('left', bloc1.left + 'px');
+function moveBloc(state, event, bloc, nb_bloc) {
+	/*bloc.right -= MOVEBLOC;
+    bloc.left -= MOVEBLOC;
+*/
+
+
+	if (event == 1) {
+		$('#bloc' + event).css('width', GAMEBOARDWIDTH + 50 + 'px');
+	} else if (event == 2) {
+		$('#bloc' + event).css('width', GAMEBOARDWIDTH + 50 + 'px');
+	}
+
+    $('.' + nb_bloc).css('left', $('.' + nb_bloc).position().left - MOVEBLOC + 'px');
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
-    if (bloc1.left < 0 - bloc1.width) {
-		$('#bloc1').remove();
-		$('#gameboard').append('<div id="bloc1"></div>');
+    //if (bloc.left < 0 - bloc.width) {
+	if ($('.' + nb_bloc).position().left < 0 - $('.' + nb_bloc).width()) {
+		$('.' + nb_bloc).remove();
+//		$('#gameboard').append('<div id="bloc'+nb_bloc+'"></div>');
 
 		lockGround = false;
 		lock = false;
-		bloc1.right = GAMEBOARDWIDTH;
-        bloc1.left = GAMEBOARDWIDTH - $('#bloc1').width();
-        $('#bloc1').css('left', bloc1.left + 'px');
+		/*bloc.right = GAMEBOARDWIDTH;
+        bloc.left = GAMEBOARDWIDTH - $('#bloc' + event).width();
+        $('#bloc' + event).css('left', bloc.left + 'px');*/
 
 		if (state == 'up') {
 			sky = sky - 50;
@@ -134,11 +160,13 @@ function moveBloc(state) {
 
         clearInterval(move);
 		cookieBestScore(score);
+		return;
         //launchEvent();
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
-    if (bloc1.left <= player.right && bloc1.left >= player.left) {
+    //if (bloc.left <= player.right && bloc.left >= player.left) {
+	if ($('.' + nb_bloc).position().left <= player.right && $('.' + nb_bloc).position().left >= player.left) {
         /* STATE DOWN */
 		if (lock || lockGround)
 			return;
@@ -163,7 +191,7 @@ function moveBloc(state) {
 		}
 		/* ... AT THE TOP */
 		if (jumping) {
-            if (bloc1.top <= player.bottom) {
+            if ($('.' + nb_bloc).position().top <= player.bottom) {
                 console.log('Game over ! top');
                 clearInterval(move);
                 clearInterval(start);
@@ -253,48 +281,50 @@ function keyFunction(evnt) {
 
 var start = setInterval(function() {
 
-        var event = Math.floor((Math.random() * 3) + 1);
+	var event = 3/*Math.floor((Math.random() * 3) + 3)*/;
 
-        delay = Math.floor((Math.random() * 1500) + 500);
+	delay = Math.floor((Math.random() * 1500) + 500);
+
+	nb_bloc = nb_bloc + 1;
 
         //var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
 
         //move = setInterval(moveBloc, MOVE_DELAI);
-        switch (event){
-            case 1:
-                //$('#bloc1').css('background-color', '#ff00d9');
+    switch (event){
+        case 1:
+            //$('#bloc1').css('background-color', '#ff00d9');
 //                move = setInterval(moveBloc, MOVE_DELAI);$
-				if (sky > 0) {
-					initBloc('grey', 'up');
-					move = setInterval(moveBloc, MOVE_DELAI, 'up');
-				}
-				/*else {
-					launchEvent();
-				}*/
-            break;
-            case 2:
-				//move = setInterval(moveGroundUp, MOVE_DELAI);
-				if (baseBottom > 50) {
-					initBloc('white', 'down');
-                	move = setInterval(moveBloc, MOVE_DELAI, 'down');
-				}
-				/*else {
-					launchEvent();
-				}*/
-            break;
-            case 3:
-				//move = setInterval(moveGroundUp, MOVE_DELAI);
+			if (sky > 0) {
+				initBloc('grey', 'up', event);
+				move = setInterval(moveBloc, MOVE_DELAI, 'up', event, bloc1);
+			}
+			/*else {
+				launchEvent();
+			}*/
+        break;
+        case 2:
+			//move = setInterval(moveGroundUp, MOVE_DELAI);
+			if (baseBottom > 50) {
+				initBloc('white', 'down', event);
+            	move = setInterval(moveBloc, MOVE_DELAI, 'down', event, bloc2);
+			}
+			/*else {
+				launchEvent();
+			}*/
+        break;
+        case 3:
+			//move = setInterval(moveGroundUp, MOVE_DELAI);
 //				move = setInterval(moveGroundDown, MOVE_DELAI);
-				initBloc('red');
-                move = setInterval(moveBloc, MOVE_DELAI);
-				//launchEvent();
-            break;
-            default:
-                //launchEvent();
-            break;
-            /*case 2:
-            break;
-            case 3:
-            break;*/
-        }
-    }, 1500);
+			initBloc('red', 'simple', event, nb_bloc);
+            move = setInterval(moveBloc, MOVE_DELAI, 'simple', event, bloc3, nb_bloc);
+			//launchEvent();
+        break;
+        default:
+            //launchEvent();
+        break;
+        /*case 2:
+        break;
+        case 3:
+        break;*/
+    }
+}, 900);

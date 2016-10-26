@@ -74,6 +74,36 @@ body {
 	bottom: 50px;
 	right: 0px;
 
+	width: 40px;
+	height: 40px;
+
+    /*background-color: #ff00d9;*/
+
+	border-radius: 	10px;
+
+	z-index: 2;
+}
+
+#bloc2{
+	position: absolute;
+	bottom: 50px;
+	right: 0px;
+
+	width: 50px;
+	height: 50px;
+
+    /*background-color: #ff00d9;*/
+
+	border-radius: 	10px;
+
+	z-index: 2;
+}
+
+#bloc3{
+	position: absolute;
+	bottom: 50px;
+	right: 0px;
+
 	width: 50px;
 	height: 50px;
 
