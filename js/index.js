@@ -128,7 +128,7 @@ function moveBloc(state) {
     }
 
     /* IF THE PLAYER TOUCH THE BLOC ... */
-    if (bloc1.left <= player.right && bloc1.left >= player.left) {
+    if (bloc1.left <= player.right && bloc1.left >= player.left || bloc1.right >= player.left && bloc1.right <= player.right) {
         /* ... AT THE TOP */
 		if (lock)
 			return;
