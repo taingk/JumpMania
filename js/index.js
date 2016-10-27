@@ -294,8 +294,7 @@ function launchEvent() {
 	event == 1 || event == 2 ? passThrough = GAMEBOARDWIDTH + 90 : passThrough = 0;
 
 	delay = Math.floor((Math.random() * 950) + 550);
-//	console.log(delay);
-	start2 = setTimeout(launchEvent, 550);
+	start2 = setTimeout(launchEvent, delay);
 	nb_bloc = nb_bloc + 1;
 	//var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
 	//move = setInterval(moveBloc, MOVE_DELAI);
@@ -311,9 +310,6 @@ function launchEvent() {
 					move = setInterval(moveBloc, MOVE_DELAI, 'up', event, /*bloc1,*/ nb_bloc, passThrough);
 				}
 			}
-			/*else {
-				launchEvent();
-			}*/
 		break;
 		case 2:
 			//move = setInterval(moveGroundUp, MOVE_DELAI);
