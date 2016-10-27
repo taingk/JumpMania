@@ -65,12 +65,14 @@ var degrees = 0;
 var time;
 var timer;
 var move;
-var delay = 500;
+var move2;
+var delay = 1000;
 // Bloc1's bottom from css sheet
 var baseBottom = 50;
 var lock = false;
 var lockGround = false;
 var nb_bloc = 0;
+var start2;
 
 /* COOKIES FUNCTION */
 
@@ -96,46 +98,46 @@ function deleteCookies() {
 	Cookies.remove('BestScore');
 }
 
-function initBloc(color, state, event, nb_bloc) {
+function initBloc(color, event, nb_bloc) {
 	$('#gameboard').append('<div id="bloc'+event+'" class="'+nb_bloc+'"></div>');
 
-	if (state == 'up') {
-		$('#bloc' + nb_bloc).css({
-            'height': '50px',
-		    'border-radius': '0px'
-        });
-	} else if (state == 'down') {
-		$('#bloc' + nb_bloc).css({
-            'height': '50px',
-            'bottom': (baseBottom - 50) + 'px',
-            'border-radius': '0px',
-        });
-	} else {
+	// FOR ALL BLOC
+	$('.' + nb_bloc).css({
+		'left': $('.' + nb_bloc).position().left - MOVEBLOC + 'px',
+		'border-radius': '10px'
+	});
+	// FOR BLOC UP AND DOWN
+	if (event == 1 || event == 2) {
 		$('.' + nb_bloc).css({
 			'bottom': baseBottom + 'px',
-			'background-color': color
+			'background-color': color,
+			'width': GAMEBOARDWIDTH + 50 + 'px'
+		});
+	}
+	// FOR BLOC SIMPLE
+	else if (event == 3) {
+		$('.' + nb_bloc).css({
+			'bottom': baseBottom + 'px',
+			'background-color': color,
+			'width': 50 + 'px',
 		});
 	}
 }
 
 /* MOVE BLOCS FROM RIGHT TO LEFT */
-function moveBloc(state, event, bloc, nb_bloc) {
+function moveBloc(state, event, /*bloc,*/ nb_bloc, passThrough) {
 	/*bloc.right -= MOVEBLOC;
     bloc.left -= MOVEBLOC;
 */
-
-
-	if (event == 1) {
-		$('#bloc' + event).css('width', GAMEBOARDWIDTH + 50 + 'px');
-	} else if (event == 2) {
-		$('#bloc' + event).css('width', GAMEBOARDWIDTH + 50 + 'px');
-	}
-
-    $('.' + nb_bloc).css('left', $('.' + nb_bloc).position().left - MOVEBLOC + 'px');
+	$('.' + nb_bloc).css('left', $('.' + nb_bloc).position().left - MOVEBLOC + 'px');
 
     /* IF THE BLOC PASS THROUGH THE GAMEBOARD */
     //if (bloc.left < 0 - bloc.width) {
-	if ($('.' + nb_bloc).position().left < 0 - $('.' + nb_bloc).width()) {
+	if (!passThrough)
+		passThrough = 0 - $('.' + nb_bloc).width();
+	else
+		passThrough = $('.' + nb_bloc).width() - GAMEBOARDWIDTH - 65;
+	if ($('.' + nb_bloc).position().left < passThrough) {
 		$('.' + nb_bloc).remove();
 //		$('#gameboard').append('<div id="bloc'+nb_bloc+'"></div>');
 
@@ -147,19 +149,19 @@ function moveBloc(state, event, bloc, nb_bloc) {
 
 		if (state == 'up') {
 			sky = sky - 50;
-			baseBottom = baseBottom + 50;
-			$('#ground').css('height', baseBottom + 'px');
+			$('#ground').css('height', ($('#ground').height() + 50) + 'px');
 		} else if (state == 'down') {
 			sky = sky + 50;
-			baseBottom = baseBottom - 50;
-			$('#ground').css('height', baseBottom + 'px');
+			$('#ground').css('height', ($('#ground').height() - 50) + 'px');
 		} else {
         	score ++;
         	$('#score').html(score);
 		}
 
-        clearInterval(move);
-		cookieBestScore(score);
+		if (nb_bloc % 2 == 0)
+			clearInterval(move2);
+		else
+			clearInterval(move);
 		return;
         //launchEvent();
     }
@@ -193,15 +195,19 @@ function moveBloc(state, event, bloc, nb_bloc) {
 		if (jumping) {
             if ($('.' + nb_bloc).position().top <= player.bottom) {
                 console.log('Game over ! top');
-                clearInterval(move);
-                clearInterval(start);
+				clearInterval(move2);
+				clearInterval(move);
+				clearTimeout(start);
+				clearTimeout(start2);
             }
         }
         /* ... AT THE LEFT */
         else {
             console.log('Game over ! right');
-            clearInterval(move);
-            clearInterval(start);
+			clearInterval(move2);
+			clearInterval(move);
+			clearTimeout(start);
+			clearTimeout(start2);
         }
     }
 }
@@ -279,52 +285,69 @@ function keyFunction(evnt) {
     }
 }
 
-var start = setInterval(function() {
+var start = setTimeout(launchEvent, delay);
 
-	var event = 3/*Math.floor((Math.random() * 3) + 3)*/;
+function launchEvent() {
+	var event = Math.floor((Math.random() * 3) + 1);
+	var passThrough;
 
-	delay = Math.floor((Math.random() * 1500) + 500);
+	event == 1 || event == 2 ? passThrough = GAMEBOARDWIDTH + 90 : passThrough = 0;
 
+	delay = Math.floor((Math.random() * 950) + 550);
+//	console.log(delay);
+	start2 = setTimeout(launchEvent, 550);
 	nb_bloc = nb_bloc + 1;
-
-        //var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
-
-        //move = setInterval(moveBloc, MOVE_DELAI);
-    switch (event){
-        case 1:
-            //$('#bloc1').css('background-color', '#ff00d9');
+	//var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
+	//move = setInterval(moveBloc, MOVE_DELAI);
+	switch (event){
+		case 1:
+			//$('#bloc1').css('background-color', '#ff00d9');
 //                move = setInterval(moveBloc, MOVE_DELAI);$
-			if (sky > 0) {
-				initBloc('grey', 'up', event);
-				move = setInterval(moveBloc, MOVE_DELAI, 'up', event, bloc1);
+			if (baseBottom < 250) {
+				initBloc('grey', event, nb_bloc);
+				if (nb_bloc % 2 == 0) {
+					move2 = setInterval(moveBloc, MOVE_DELAI, 'up', event, /*bloc1,*/ nb_bloc, passThrough);
+				} else {
+					move = setInterval(moveBloc, MOVE_DELAI, 'up', event, /*bloc1,*/ nb_bloc, passThrough);
+				}
 			}
 			/*else {
 				launchEvent();
 			}*/
-        break;
-        case 2:
+		break;
+		case 2:
 			//move = setInterval(moveGroundUp, MOVE_DELAI);
 			if (baseBottom > 50) {
-				initBloc('white', 'down', event);
-            	move = setInterval(moveBloc, MOVE_DELAI, 'down', event, bloc2);
+				baseBottom = baseBottom - 50;
+				initBloc('white', event, nb_bloc);
+				if (nb_bloc % 2 == 0) {
+					move2 = setInterval(moveBloc, MOVE_DELAI, 'down', event, nb_bloc, passThrough);
+				} else {
+					move = setInterval(moveBloc, MOVE_DELAI, 'down', event, nb_bloc, passThrough);
+				}
 			}
 			/*else {
 				launchEvent();
 			}*/
-        break;
-        case 3:
+		break;
+		case 3:
 			//move = setInterval(moveGroundUp, MOVE_DELAI);
 //				move = setInterval(moveGroundDown, MOVE_DELAI);
-			initBloc('red', 'simple', event, nb_bloc);
-            move = setInterval(moveBloc, MOVE_DELAI, 'simple', event, bloc3, nb_bloc);
+			initBloc('red', event, nb_bloc);
+			if (nb_bloc % 2 == 0)
+				move2 = setInterval(moveBloc, MOVE_DELAI, 'simple', event, /*bloc3,*/ nb_bloc, passThrough);
+			else
+				move = setInterval(moveBloc, MOVE_DELAI, 'simple', event, /*bloc3,*/ nb_bloc, passThrough);
 			//launchEvent();
-        break;
-        default:
-            //launchEvent();
-        break;
-        /*case 2:
-        break;
-        case 3:
-        break;*/
-    }
-}, 900);
+		break;
+		default:
+			//launchEvent();
+		break;
+		/*case 2:
+		break;
+		case 3:
+		break;*/
+	}
+	if (event == 1)
+		baseBottom = baseBottom + 50;
+}

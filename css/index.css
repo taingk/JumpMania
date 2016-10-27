@@ -74,27 +74,26 @@ body {
 	bottom: 50px;
 	right: 0px;
 
-	width: 40px;
-	height: 40px;
+	width: 0px;
+	height: 50px;
+    /*background-color: grey;#ff00d9;
 
-    /*background-color: #ff00d9;*/
-
-	border-radius: 	10px;
+	border-radius: 	0px;*/
 
 	z-index: 2;
 }
 
 #bloc2{
 	position: absolute;
-	bottom: 50px;
+	bottom: 0px;
 	right: 0px;
 
-	width: 50px;
+	width: 0px;
 	height: 50px;
 
-    /*background-color: #ff00d9;*/
+    /*background-color: white;/*#ff00d9;
 
-	border-radius: 	10px;
+	border-radius: 	10px;*/
 
 	z-index: 2;
 }
@@ -104,12 +103,12 @@ body {
 	bottom: 50px;
 	right: 0px;
 
-	width: 50px;
+	width: 0px;
 	height: 50px;
 
-    /*background-color: #ff00d9;*/
+    /*background-color: red;/*#ff00d9;
 
-	border-radius: 	10px;
+	border-radius: 	10px;*/
 
 	z-index: 2;
 }
