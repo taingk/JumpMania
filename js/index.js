@@ -7,6 +7,8 @@ function playsong() {
     return 0;
 }
 
+$('#log').append('1 Début');
+
 /* STATIC VARIABLES */
 var GAMEBOARDWIDTH = $('#gameboard').width();
 var GAMEBOARDHEIGHT = $('#gameboard').height();
@@ -16,6 +18,8 @@ var MOVE_DELAI = 30;
 var JUMP_DELAI = 10;
 var LIFENB = 3;
 var RADIUS = 20;
+
+//$('#log').append('2 Début');
 
 /* GAME OBJECTS */
 //player
@@ -263,9 +267,10 @@ function keyFunction(evnt) {
         }
         break;
         case "DOWN":
-            clearInterval(move);
+            /*clearInterval(move);
             $('#bloc1').css('left', GAMEBOARDWIDTH + 'px');
-            move = setInterval(moveBloc, MOVE_DELAI);
+            move = setInterval(moveBloc, MOVE_DELAI);*/
+			blocsGenerator();
         break;
         case "RIGHT":
 			sky = sky - 50;
@@ -285,15 +290,72 @@ function keyFunction(evnt) {
     }
 }
 
-var start = setTimeout(launchEvent, delay);
+
+blocsGenerator();
+
+/*
+function blocsGenerator() {
+	var blocPos = 50;
+	var width = blocPos;
+	var nb_bloc = 0;
+	var i = 0;
+
+	for (; width < GAMEBOARDWIDTH + blocPos; width = width + blocPos, nb_bloc ++) {
+		$('#gameboard').append('<div id="'+nb_bloc+'" class="bloc4"></div>');
+		$('#' + nb_bloc).css('visibility','hidden');
+		if (width >= blocPos * 2)
+			$('#' + nb_bloc).css('left', $('#' + (nb_bloc - 1)).position().left - blocPos + 'px');
+	}
+
+	var defile = setInterval(function() {
+		if (i <= nb_bloc) {
+			$('#' + (i - 1)).remove();
+			$('#' + i).css('visibility', 'visible');
+			i++;
+		} else {
+			clearInterval(defile);
+			$('#log').append('Fin défilement __ ');
+			setTimeout(blocsGenerator, 1000);
+		}
+	}, 50);
+}*/
+
+function blocsGenerator() {
+	var blocPos = 50;
+	var width = blocPos;
+	var nb_bloc = 0;
+	var i = 0;
+
+	var defile = setInterval(function() {
+		$('#log').append('0');
+		if (width < GAMEBOARDWIDTH + blocPos) {
+			if (width >= blocPos * 2)
+				$('#' + nb_bloc).css('left', $('#' + (nb_bloc - 1)).position().left - blocPos + 'px');
+			 width = width + blocPos;
+			 nb_bloc ++;
+		}
+		console.log(nb_bloc);
+		$('#log').append('1');
+		if (i <= nb_bloc) {
+			$('#' + (i - 1)).css('visibility', 'hidden');
+			$('#' + i).css('visibility', 'visible');
+			i++;
+		} else {
+			clearInterval(defile);
+			setTimeout(blocsGenerator, 1000);
+		}
+	}, 50);
+}
+
+//var start = setTimeout(launchEvent, delay);
 
 function launchEvent() {
-	var event = Math.floor((Math.random() * 3) + 1);
+	var event = 3/*Math.floor((Math.random() * 3) + 1)*/;
 	var passThrough;
 
 	event == 1 || event == 2 ? passThrough = GAMEBOARDWIDTH + 90 : passThrough = 0;
 
-	delay = Math.floor((Math.random() * 950) + 550);
+	delay = 3000/*Math.floor((Math.random() * 950) + 550)*/;
 	start2 = setTimeout(launchEvent, delay);
 	nb_bloc = nb_bloc + 1;
 	//var MOVE_DELAI = Math.floor((Math.random() * 35) + 25);
